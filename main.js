@@ -21,7 +21,7 @@ Promise.all([
     var city2 = "MDW";
 
     // Set initial chart dimensions
-    var margin = { top: 20, right: 150, bottom: 40, left: 30 };
+    var margin = { top: 20, right: 150, bottom: 100, left: 30 };
     var width = 1000 - margin.left - margin.right;
     var height = 550 - margin.top - margin.bottom;
 
@@ -134,9 +134,9 @@ Promise.all([
         // Update xScale domain
         xScale.domain(allData.map(function (d) { return d.date; }));
 
-        // Update yScale domains
-        yTemperatureScale.domain([0, d3.max(allData, function (d) { return d.actual_mean_temp; })]);
-        yPrecipitationScale.domain([0, d3.max(allData, function (d) { return d.actual_precipitation; })]);
+        // // Update yScale domains
+        // yTemperatureScale.domain([0, d3.max(allData, function (d) { return d.actual_mean_temp; })]);
+        // yPrecipitationScale.domain([0, d3.max(allData, function (d) { return d.actual_precipitation; })]);
 
         // Remove existing elements
         svg.selectAll("*").remove();
