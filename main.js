@@ -17,13 +17,13 @@ Promise.all([
     var phxData = data[6];
 
     // Set initial cities
-    var city1 = "CLT";
-    var city2 = "CQT";
+    var city1 = "CQT";
+    var city2 = "MDW";
 
     // Set initial chart dimensions
-    var margin = { top: 50, right: 50, bottom: 50, left: 50 };
-    var width = 700 - margin.left - margin.right;
-    var height = 400 - margin.top - margin.bottom;
+    var margin = { top: 20, right: 150, bottom: 40, left: 30 };
+    var width = 1000 - margin.left - margin.right;
+    var height = 550 - margin.top - margin.bottom;
 
     // Append SVG
     var svg = d3.select("#chart")
@@ -35,8 +35,8 @@ Promise.all([
 
     // Create scales
     var xScale = d3.scaleBand().range([0, width]).padding(0.1);
-    var yTemperatureScale = d3.scaleLinear().range([height, 0]);
-    var yPrecipitationScale = d3.scaleLinear().range([height, 0]);
+    var yTemperatureScale = d3.scaleLinear().range([height, 0]).domain([0, 100]);
+    var yPrecipitationScale = d3.scaleLinear().range([height, 0]).domain([0, 4]);
 
     // Define the line functions
     var tempLine = d3.line()
@@ -140,6 +140,34 @@ Promise.all([
 
         // Remove existing elements
         svg.selectAll("*").remove();
+        
+        // // Remove existing X axis
+        // svg.selectAll(".x.axis").remove();
+        
+           // Draw X axis
+           svg.append("g")
+           .attr("class", "x axis")
+           .attr("transform", "translate(0," + height + ")")
+           .call(d3.axisBottom(xScale)
+               .tickValues(xScale.domain().filter(function (d, i) {
+                   // Extract the month from the date
+                   var month = d.split("-")[1];
+                   // Extract the year from the date
+                   var year = d.split("-")[0];
+                   // Display only the first day of the month for January, or every January
+                   return (month === "01" && d.split("-")[2] === "01") || (i === 0 && month === "01");
+               }))
+               .tickFormat(function (d) {
+                   var dateParts = d.split("-");
+                   var year = dateParts[0];
+                   var month = dateParts[1];
+                   // Define an array of month names
+                   var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                   // Return the formatted date with the month spelled out
+                   return monthNames[parseInt(month) - 1] + " '" + year.slice(2); // Display as "MMM 'YY"
+               })
+           );
+
 
         // Draw temperature line
         svg.append("path")
@@ -158,16 +186,46 @@ Promise.all([
             .style("fill", "none") // Ensure no fill is applied
             .style("stroke-dasharray", ("3, 3")); // Set line style to dotted
 
-        // Draw X axis
-        svg.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(xScale)
-                .tickFormat(function (d) {
-                    var yearMonth = d.split("-");
-                    return yearMonth[1] + "/" + yearMonth[0]; // Display as MM/YYYY
-                })
-            );
+        // // Draw X axis
+        // svg.append("g")
+        //     .attr("class", "x axis")
+        //     .attr("transform", "translate(0," + height + ")")
+        //     .call(d3.axisBottom(xScale)
+        //         .tickFormat(function (d) {
+        //             var dateParts = d.split("-");
+        //             var year = dateParts[0];
+        //             var month = dateParts[1];
+        //             // Define an array of month names
+        //             var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        //             // Return the formatted date
+        //             return monthNames[parseInt(month) - 1] + " '" + year.slice(2); // Display as "MMM 'YY"
+        //         })
+        //     );
+
+        // // Draw X axis
+        // svg.append("g")
+        //     .attr("class", "x axis")
+        //     .attr("transform", "translate(0," + height + ")")
+        //     .call(d3.axisBottom(xScale)
+        //         .tickValues(xScale.domain().filter(function (d, i) {
+        //             // Extract the month from the date
+        //             var month = d.split("-")[1];
+        //             // Extract the year from the date
+        //             var year = d.split("-")[0];
+        //             // Display only the first day of the month for January, or every January
+        //             return (month === "01" && d.split("-")[2] === "01") || (i === 0 && month === "01");
+        //         }))
+        //         .tickFormat(function (d) {
+        //             var dateParts = d.split("-");
+        //             var year = dateParts[0];
+        //             var month = dateParts[1];
+        //             // Define an array of month names
+        //             var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        //             // Return the formatted date with the month spelled out
+        //             return monthNames[parseInt(month) - 1] + " '" + year.slice(2); // Display as "MMM 'YY"
+        //         })
+        //     );
+
 
         // Draw left Y axis
         svg.append("g")
@@ -205,7 +263,7 @@ Promise.all([
         svg.append("text")
             .attr("class", "y label temperature")
             .attr("text-anchor", "end")
-            .attr("y", -margin.left + 20)
+            .attr("y", - margin.left + 30)
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")
             .text("Temperature");
@@ -214,7 +272,7 @@ Promise.all([
         svg.append("text")
             .attr("class", "y label precipitation")
             .attr("text-anchor", "end")
-            .attr("y", width + margin.right - 20)
+            .attr("y", width + margin.right - 40)
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")
             .text("Precipitation");

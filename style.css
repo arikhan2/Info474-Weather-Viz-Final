@@ -2,6 +2,16 @@
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+
+h1 {
+    font-size: 24px; /* Adjust the size as per your requirement */
+}
+
+h2 {
+    font-size: 20px; /* Adjust the size as per your requirement */
 }
 
 .controls {
@@ -20,6 +30,6 @@
 }
 
 .axis text {
-    font-family: sans-serif;
+    font-family: Arial, sans-serif;
     font-size: 11px;
 }
