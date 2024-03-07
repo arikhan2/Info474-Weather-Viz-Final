@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dual Axis Weather Chart</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Comparing Temperature and Precipitation in Multiple Cities</h1>
+        <h2>Select two cities to compare</h2>
+        <div class="controls">
+            <label for="city1">City 1:</label>
+            <select id="city1">
+                <option value="CLT">Charlotte</option>
+                <option value="CQT">Cincinnati</option>
+                <option value="IND">Indianapolis</option>
+                <option value="JAX">Jacksonville</option>
+                <option value="MDW">Midway</option>
+                <option value="PHL">Philadelphia</option>
+                <option value="PHX">Phoenix</option>
+            </select>
+            <label for="city2">City 2:</label>
+            <select id="city2">
+                <option value="CLT">Charlotte</option>
+                <option value="CQT">Cincinnati</option>
+                <option value="IND">Indianapolis</option>
+                <option value="JAX">Jacksonville</option>
+                <option value="MDW">Midway</option>
+                <option value="PHL">Philadelphia</option>
+                <option value="PHX">Phoenix</option>
+            </select>
+        </div>
+        <div id="chart"></div>
+    </div>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
