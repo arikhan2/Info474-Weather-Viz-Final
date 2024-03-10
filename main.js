@@ -21,7 +21,7 @@ Promise.all([
     var city2 = "MDW";
 
     // Set initial chart dimensions
-    var margin = { top: 20, right: 150, bottom: 100, left: 30 };
+    var margin = { top: 20, right: 150, bottom: 100, left: 100 };
     var width = 1000 - margin.left - margin.right;
     var height = 550 - margin.top - margin.bottom;
 
@@ -229,26 +229,26 @@ Promise.all([
             .attr("class", "x label")
             .attr("text-anchor", "end")
             .attr("x", width)
-            .attr("y", height + margin.bottom - 10)
+            .attr("y", height + margin.bottom - 50)
             .text("Date");
 
         // Draw left Y axis label
         svg.append("text")
             .attr("class", "y label temperature")
             .attr("text-anchor", "end")
-            .attr("y", - margin.left + 30)
+            .attr("y", - margin.left - 1)
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")
-            .text("Temperature");
+            .text("Temperature (F°)");
 
         // Draw right Y axis label
         svg.append("text")
             .attr("class", "y label precipitation")
             .attr("text-anchor", "end")
-            .attr("y", width + margin.right - 40)
+            .attr("y", width + margin.right - 70)
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")
-            .text("Precipitation");
+            .text("Precipitation (in″)");
     }
 
     // Initial chart rendering
