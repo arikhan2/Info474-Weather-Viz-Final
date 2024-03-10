@@ -134,15 +134,9 @@ Promise.all([
         // Update xScale domain
         xScale.domain(allData.map(function (d) { return d.date; }));
 
-        // // Update yScale domains
-        // yTemperatureScale.domain([0, d3.max(allData, function (d) { return d.actual_mean_temp; })]);
-        // yPrecipitationScale.domain([0, d3.max(allData, function (d) { return d.actual_precipitation; })]);
-
         // Remove existing elements
         svg.selectAll("*").remove();
 
-        // // Remove existing X axis
-        // svg.selectAll(".x.axis").remove();
 
         // Draw X axis
         svg.append("g")
@@ -166,25 +160,14 @@ Promise.all([
                     // Return the formatted date with the month spelled out
                     return monthNames[parseInt(month) - 1] + " '" + year.slice(2); // Display as "MMM 'YY"
                 })
-            );
+            )
+            .selectAll("text")
+            .style("text-anchor", "end")
+            .attr("dx", "-0.5em")
+            .attr("dy", "0.15em")
+            .attr("transform", "rotate(-65)");
 
 
-        // // Draw temperature line
-        // svg.append("path")
-        //     .datum(allData)
-        //     .attr("class", "line temperature city1")
-        //     .attr("d", tempLine)
-        //     .style("stroke", cityColors[city1])
-        //     .style("fill", "none");
-
-        // // Draw precipitation line
-        // svg.append("path")
-        //     .datum(allData)
-        //     .attr("class", "line precipitation city2")
-        //     .attr("d", precipLine)
-        //     .style("stroke", cityColors[city2]) // Assign color based on city
-        //     .style("fill", "none") // Ensure no fill is applied
-        //     .style("stroke-dasharray", ("3, 3")); // Set line style to dotted
         // Draw temperature lines
         svg.append("path")
             .datum(selectedData1)
@@ -216,47 +199,7 @@ Promise.all([
             .style("stroke", cityColors[city2])
             .style("fill", "none")
             .style("stroke-dasharray", ("3, 3"));
-        // // Draw X axis
-        // svg.append("g")
-        //     .attr("class", "x axis")
-        //     .attr("transform", "translate(0," + height + ")")
-        //     .call(d3.axisBottom(xScale)
-        //         .tickFormat(function (d) {
-        //             var dateParts = d.split("-");
-        //             var year = dateParts[0];
-        //             var month = dateParts[1];
-        //             // Define an array of month names
-        //             var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        //             // Return the formatted date
-        //             return monthNames[parseInt(month) - 1] + " '" + year.slice(2); // Display as "MMM 'YY"
-        //         })
-        //     );
-
-        // // Draw X axis
-        // svg.append("g")
-        //     .attr("class", "x axis")
-        //     .attr("transform", "translate(0," + height + ")")
-        //     .call(d3.axisBottom(xScale)
-        //         .tickValues(xScale.domain().filter(function (d, i) {
-        //             // Extract the month from the date
-        //             var month = d.split("-")[1];
-        //             // Extract the year from the date
-        //             var year = d.split("-")[0];
-        //             // Display only the first day of the month for January, or every January
-        //             return (month === "01" && d.split("-")[2] === "01") || (i === 0 && month === "01");
-        //         }))
-        //         .tickFormat(function (d) {
-        //             var dateParts = d.split("-");
-        //             var year = dateParts[0];
-        //             var month = dateParts[1];
-        //             // Define an array of month names
-        //             var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        //             // Return the formatted date with the month spelled out
-        //             return monthNames[parseInt(month) - 1] + " '" + year.slice(2); // Display as "MMM 'YY"
-        //         })
-        //     );
-
-
+       
         // Draw left Y axis
         svg.append("g")
             .attr("class", "y axis temperature")
