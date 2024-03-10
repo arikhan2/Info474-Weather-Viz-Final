@@ -143,16 +143,28 @@ Promise.all([
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(xScale)
-               
                 .tickFormat(function (d) {
+                    // Extract month and year
                     var dateParts = d.split("-");
-                    var year = dateParts[0];
                     var month = dateParts[1];
+                    var year = dateParts[0];
+
                     // Define an array of month names
                     var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-                    // Return the formatted date with the month spelled out
-                    return monthNames[parseInt(month) - 1] + " '" + year.slice(2); // Display as "MMM 'YY"
+
+                    // Create a set to store unique months (seenMonths)
+                    var seenMonths = new Set();
+
+                    // Check if the month hasn't been seen before (prevents duplicates)
+                    if (!seenMonths.has(month)) {
+                        seenMonths.add(month);
+                        return monthNames[parseInt(month) - 1] + " '" + year.slice(2); // Display "MMM 'YY" format
+                    } else {
+                        // Return an empty string for duplicate months
+                        return "";
+                    }
                 })
+                .ticks(12) // Ensure 12 ticks (one for each month)
             )
             .selectAll("text")
             .style("text-anchor", "end")
@@ -160,6 +172,8 @@ Promise.all([
             .attr("dy", "0.15em")
             .attr("transform", "rotate(-45)")
             .style("font-size", "12px");
+
+
 
 
         // Draw temperature lines
@@ -193,7 +207,7 @@ Promise.all([
             .style("stroke", cityColors[city2])
             .style("fill", "none")
             .style("stroke-dasharray", ("3, 3"));
-       
+
         // Draw left Y axis
         svg.append("g")
             .attr("class", "y axis temperature")
