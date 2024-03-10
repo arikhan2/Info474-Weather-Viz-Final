@@ -21,7 +21,7 @@ Promise.all([
     var city2 = "MDW";
 
     // Set initial chart dimensions
-    var margin = { top: 20, right: 150, bottom: 100, left: 100 };
+    var margin = { top: 20, right: 150, bottom: 200, left: 100 };
     var width = 1000 - margin.left - margin.right;
     var height = 550 - margin.top - margin.bottom;
 
@@ -143,14 +143,7 @@ Promise.all([
             .attr("class", "x axis")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(xScale)
-                .tickValues(xScale.domain().filter(function (d, i) {
-                    // Extract the month from the date
-                    var month = d.split("-")[1];
-                    // Extract the year from the date
-                    var year = d.split("-")[0];
-                    // Display only the first day of the month for January, or every January
-                    return (month === "01" && d.split("-")[2] === "01") || (i === 0 && month === "01");
-                }))
+               
                 .tickFormat(function (d) {
                     var dateParts = d.split("-");
                     var year = dateParts[0];
@@ -165,7 +158,8 @@ Promise.all([
             .style("text-anchor", "end")
             .attr("dx", "-0.5em")
             .attr("dy", "0.15em")
-            .attr("transform", "rotate(-65)");
+            .attr("transform", "rotate(-45)")
+            .style("font-size", "12px");
 
 
         // Draw temperature lines
@@ -229,7 +223,7 @@ Promise.all([
             .attr("class", "x label")
             .attr("text-anchor", "end")
             .attr("x", width)
-            .attr("y", height + margin.bottom - 50)
+            .attr("y", height + margin.bottom - 70)
             .text("Date");
 
         // Draw left Y axis label
