@@ -19,7 +19,7 @@ Promise.all([
     var city1 = "CQT";
     var city2 = "MDW";
     // Set initial chart dimensions
-    var margin = { top: 20, right: 150, bottom: 200, left: 100 };
+    var margin = { top: 120, right: 150, bottom: 200, left: 150 };
     var width = 1000 - margin.left - margin.right;
     var height = 550 - margin.top - margin.bottom;
     // Append SVG
@@ -103,9 +103,19 @@ Promise.all([
         for (var key in selectedDataByMonth2) {
             allData = allData.concat(selectedDataByMonth2[key]);
         }
+
+
+
+        // Extracting all unique months from the data
+        var allMonths = Array.from(new Set(allData.map(d => d.date.split("-")[2])));
+
+        // Sort the months to ensure they are in order
+        allMonths.sort();
         // // Define x-axis scale
         var xScale = d3.scaleBand()
             // .domain(allData.map(function (d) { return d.date; }))
+            // .domain(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]) // Months
+            .domain(allMonths)
             .range([0, width])
             .padding(0.1); // Adjust padding as needed
 
@@ -228,7 +238,90 @@ Promise.all([
             .attr("dy", ".75em")
             .attr("transform", "rotate(-90)")
             .text("Precipitation (in″)");
+
+        // Add legend
+        var legend = svg.append("g")
+            .attr("class", "legend")
+            .attr("transform", "translate(0, -120)"); // Adjust y-coordinate
+
+        // Add legend box
+        legend.append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 270)
+            .attr("height", 110) // Increased height to accommodate the dotted line
+            .style("fill", "rgba(255,255,255,0.8)")
+            .style("stroke", "black");
+
+        // Add legend items for Temperature and Precipitation
+        legend.append("text")
+            .attr("x", 10)
+            .attr("y", 20)
+            .attr("dy", ".35em")
+            .style("text-anchor", "start")
+            .text("Temperature");
+
+        legend.append("line")
+            .attr("x1", 10)
+            .attr("y1", 30)
+            .attr("x2", 80)
+            .attr("y2", 30)
+            .style("stroke", "black")
+            .style("stroke-width", 2);
+
+        legend.append("text")
+            .attr("x", 90)
+            .attr("y", 35)
+            .attr("dy", ".35em")
+            .style("text-anchor", "start")
+            .text("Precipitation");
+
+        legend.append("line")
+            .attr("x1", 90)
+            .attr("y1", 45)
+            .attr("x2", 160)
+            .attr("y2", 45)
+            .style("stroke", "black")
+            .style("stroke-width", 2)
+            .style("stroke-dasharray", "3,3"); // Adding dashed line for precipitation
+
+        // Add legend items for cities
+        var cityLegend = legend.selectAll(".cityLegend")
+            .data(Object.keys(cityColors))
+            .enter().append("g")
+            .attr("class", "cityLegend")
+            .attr("transform", function (d, i) { return "translate(" + (10 + i % 3 * 80) + "," + (60 + Math.floor(i / 3) * 20) + ")"; });
+
+        cityLegend.append("circle")
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .attr("r", 6)
+            .style("fill", function (d) { return cityColors[d]; });
+
+        cityLegend.append("text")
+            .attr("x", 10)
+            .attr("y", 0)
+            .attr("dy", ".35em")
+            .style("text-anchor", "start")
+            .text(function (d) {
+                // Spell out city abbreviations
+                switch (d) {
+                    case "CLT": return "Charlotte";
+                    case "CQT": return "Los Angeles";
+                    case "IND": return "Indianapolis";
+                    case "JAX": return "Jacksonville";
+                    case "MDW": return "Chicago";
+                    case "PHL": return "Philadelphia";
+                    case "PHX": return "Phoenix";
+                    default: return "";
+                }
+            });
+        legend.selectAll("text")
+            .style("font-size", "10px"); // Adjust the font size as needed
+
+
     }
+
 
 
 
