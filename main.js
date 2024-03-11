@@ -34,7 +34,6 @@ Promise.all([
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Create scales
-    // var xScale = d3.scaleBand().range([0, width]).padding(0.1);
     var yTemperatureScale = d3.scaleLinear().range([height, 0]).domain([0, 100]);
     var yPrecipitationScale = d3.scaleLinear().range([height, 0]).domain([0, 4]);
 
@@ -58,9 +57,7 @@ Promise.all([
         data.forEach(function (d) {
             var date = new Date(d.date);
             var month = date.getMonth();
-            var year = date.getFullYear();
-            var key = year + "-" + (month + 1); // Adjust month index to start from 1
-
+            var key = month.toString(); // Use month as the key
             if (!dataByMonth[key]) {
                 dataByMonth[key] = [];
             }
@@ -121,10 +118,6 @@ Promise.all([
             allData = allData.concat(selectedDataByMonth2[key]);
         }
 
-
-        // Update xScale domain
-        // xScale.domain(allData.map(function (d) { return d.date; }));
-
         // Define x-axis scale
         var xScale = d3.scaleBand()
             .domain(allData.map(function (d) { return d.date; }))
@@ -133,8 +126,6 @@ Promise.all([
 
         // Remove existing elements
         svg.selectAll("*").remove();
-
-
 
 
         // Draw X axis
@@ -146,16 +137,16 @@ Promise.all([
                     // Extract month
                     var dateParts = d.split("-");
                     var month = dateParts[1];
-                    // var year = dateParts[0];
 
                     // Define an array of month names
                     var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
                     return monthNames[parseInt(month) - 1]; // Display only the month abbreviation
                 })
                 .tickValues(allData.filter(function (d, i) {
-                    return i % Math.ceil(allData.length / 12) === 0; // Show ticks for every 12th data point
+                    // Select the first data point of each month
+                    return d.date.split("-")[2] === "1";
                 }).map(function (d) {
-                    return d.date;
+                    return d.date; // Use date as tick values
                 }))
             )
             .selectAll("text")
@@ -164,11 +155,6 @@ Promise.all([
             .attr("dy", "0.5em")
             .attr("transform", "rotate(-45)")
             .style("font-size", "12px");
-
-
-
-
-
 
         // Define the line functions
         var tempLine = d3.line()
