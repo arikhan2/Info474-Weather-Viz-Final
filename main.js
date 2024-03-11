@@ -33,6 +33,7 @@ Promise.all([
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
     // Create scales
     var yTemperatureScale = d3.scaleLinear().range([height, 0]).domain([0, 100]);
     var yPrecipitationScale = d3.scaleLinear().range([height, 0]).domain([0, 4]);
@@ -222,14 +223,15 @@ Promise.all([
             .attr("text-anchor", "end")
             .text("Precipitation");
 
+        var centerX = width / 2;
 
         // Draw X axis label
         svg.append("text")
             .attr("class", "x label")
-            .attr("text-anchor", "end")
-            .attr("x", width)
+            .attr("text-anchor", "middle")
+            .attr("x", centerX)
             .attr("y", height + margin.bottom - 70)
-            .text("Date");
+            .text("Month");
 
         // Draw left Y axis label
         svg.append("text")
@@ -249,6 +251,9 @@ Promise.all([
             .attr("transform", "rotate(-90)")
             .text("Precipitation (in″)");
     }
+
+
+
 
     // Initial chart rendering
     drawChart(city1, city2);
