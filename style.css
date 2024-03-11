@@ -34,15 +34,3 @@ h2 {
     font-size: 11px;
 }
 
-.x.axis {
-    font-family: Arial, sans-serif;
-    font-size: 12px; /* Adjust the font size as needed */
-    fill: none; /* This might not apply to axis elements, but it's here for consistency */
-    stroke: #000; /* Color of the axis lines */
-    shape-rendering: crispEdges; /* Ensure crisp rendering of edges */
-}
-
-.x.axis text {
-    fill: #000; /* Color of the axis labels */
-}
-

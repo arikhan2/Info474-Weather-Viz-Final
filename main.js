@@ -34,19 +34,10 @@ Promise.all([
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // Create scales
-    var xScale = d3.scaleBand().range([0, width]).padding(0.1);
+    // var xScale = d3.scaleBand().range([0, width]).padding(0.1);
     var yTemperatureScale = d3.scaleLinear().range([height, 0]).domain([0, 100]);
     var yPrecipitationScale = d3.scaleLinear().range([height, 0]).domain([0, 4]);
 
-    // Define the line functions
-    var tempLine = d3.line()
-        .x(function (d) { return xScale(d.date); })
-        .y(function (d) { return yTemperatureScale(d.actual_mean_temp); });
-
-    var precipLine = d3.line()
-        .x(function (d) { return xScale(d.date); })
-        .y(function (d) { return yPrecipitationScale(d.actual_precipitation); })
-        .curve(d3.curveLinear);
 
     // Define colors for each city
     var cityColors = {
@@ -132,10 +123,18 @@ Promise.all([
 
 
         // Update xScale domain
-        xScale.domain(allData.map(function (d) { return d.date; }));
+        // xScale.domain(allData.map(function (d) { return d.date; }));
+
+        // Define x-axis scale
+        var xScale = d3.scaleBand()
+            .domain(allData.map(function (d) { return d.date; }))
+            .range([0, width])
+            .padding(0.1); // Adjust padding as needed
 
         // Remove existing elements
         svg.selectAll("*").remove();
+
+
 
 
         // Draw X axis
@@ -144,36 +143,42 @@ Promise.all([
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(xScale)
                 .tickFormat(function (d) {
-                    // Extract month and year
+                    // Extract month
                     var dateParts = d.split("-");
                     var month = dateParts[1];
-                    var year = dateParts[0];
+                    // var year = dateParts[0];
 
                     // Define an array of month names
                     var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-                    // Create a set to store unique months (seenMonths)
-                    var seenMonths = new Set();
-
-                    // Check if the month hasn't been seen before (prevents duplicates)
-                    if (!seenMonths.has(month)) {
-                        seenMonths.add(month);
-                        return monthNames[parseInt(month) - 1] + " '" + year.slice(2); // Display "MMM 'YY" format
-                    } else {
-                        // Return an empty string for duplicate months
-                        return "";
-                    }
+                    return monthNames[parseInt(month) - 1]; // Display only the month abbreviation
                 })
-                .ticks(12) // Ensure 12 ticks (one for each month)
+                .tickValues(allData.filter(function (d, i) {
+                    return i % Math.ceil(allData.length / 12) === 0; // Show ticks for every 12th data point
+                }).map(function (d) {
+                    return d.date;
+                }))
             )
             .selectAll("text")
             .style("text-anchor", "end")
             .attr("dx", "-0.5em")
-            .attr("dy", "0.15em")
+            .attr("dy", "0.5em")
             .attr("transform", "rotate(-45)")
             .style("font-size", "12px");
 
 
+
+
+
+
+        // Define the line functions
+        var tempLine = d3.line()
+            .x(function (d) { return xScale(d.date); })
+            .y(function (d) { return yTemperatureScale(d.actual_mean_temp); });
+
+        var precipLine = d3.line()
+            .x(function (d) { return xScale(d.date); })
+            .y(function (d) { return yPrecipitationScale(d.actual_precipitation); })
+            .curve(d3.curveLinear);
 
 
         // Draw temperature lines
